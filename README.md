@@ -6,8 +6,8 @@ This is a implementation for the PSR-6 for an array cache. This implementation s
 This adapter could also be called Ephemeral or Memory adapter.  
 
 
-| Feature |   |
-| ------- | - | 
+| Feature | Supported |
+| ------- | --------- | 
 | Flush everything | Yes 
 | Expiration time | No
-| Support for tags | Yes
+| Tagging | Yes
