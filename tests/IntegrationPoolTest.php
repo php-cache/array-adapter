@@ -16,8 +16,10 @@ use Cache\IntegrationTests\CachePoolTest;
 
 class IntegrationPoolTest extends CachePoolTest
 {
+    private $cacheArray = [];
+
     public function createCachePool()
     {
-        return new ArrayCachePool();
+        return new ArrayCachePool($this->cacheArray);
     }
 }

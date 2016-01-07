@@ -16,10 +16,10 @@ use Cache\IntegrationTests\TaggableCachePoolTest;
 
 class IntegrationTagTest extends TaggableCachePoolTest
 {
-    private $cache = [];
+    private $cacheArray = [];
 
     public function createCachePool()
     {
-        return new ArrayCachePool($this->cache);
+        return new ArrayCachePool($this->cacheArray);
     }
 }

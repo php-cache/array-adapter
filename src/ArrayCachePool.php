@@ -27,7 +27,7 @@ class ArrayCachePool extends AbstractCachePool
     /**
      * @param array $cache
      */
-    public function __construct(array $cache = [])
+    public function __construct(array &$cache = [])
     {
         $this->cache = $cache;
     }
