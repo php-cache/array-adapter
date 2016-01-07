@@ -29,7 +29,7 @@ class ArrayCachePool extends AbstractCachePool
      */
     public function __construct(array &$cache = [])
     {
-        $this->cache = $cache;
+        $this->cache = &$cache;
     }
 
     protected function fetchObjectFromCache($key)
