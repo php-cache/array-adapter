@@ -35,7 +35,7 @@
     "require-dev":
     {
         "phpunit/phpunit":         "^5.1|^4.0",
-        "cache/integration-tests": "^0.3"
+        "cache/integration-tests": "^0.4"
     },
     "provide":
     {
