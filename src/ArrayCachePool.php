@@ -13,13 +13,17 @@ namespace Cache\Adapter\PHPArray;
 
 use Cache\Adapter\Common\AbstractCachePool;
 use Cache\Adapter\Common\CacheItem;
+use Cache\Hierarchy\HierarchicalCachePoolTrait;
+use Cache\Hierarchy\HierarchicalPoolInterface;
 use Psr\Cache\CacheItemInterface;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class ArrayCachePool extends AbstractCachePool
+class ArrayCachePool extends AbstractCachePool implements HierarchicalPoolInterface
 {
+    use HierarchicalCachePoolTrait;
+
     /**
      * @type array
      */
@@ -52,8 +56,9 @@ class ArrayCachePool extends AbstractCachePool
      */
     protected function fetchObjectFromCache($key)
     {
-        if (isset($this->cache[$key])) {
-            return $this->cache[$key];
+        $storageKey = $this->getHierarchyKey($key);
+        if (isset($this->cache[$storageKey])) {
+            return $this->cache[$storageKey];
         }
 
         return new CacheItem($key, false);
@@ -74,7 +79,16 @@ class ArrayCachePool extends AbstractCachePool
      */
     protected function clearOneObjectFromCache($key)
     {
-        unset($this->cache[$key]);
+        $this->commit();
+        $keyString = $this->getHierarchyKey($key, $path);
+        if (isset($this->cache[$path])) {
+            $this->cache[$path]++;
+        } else {
+            $this->cache[$path] = 0;
+        }
+        $this->clearHierarchyKeyCache();
+
+        unset($this->cache[$keyString]);
 
         return true;
     }
@@ -84,8 +98,21 @@ class ArrayCachePool extends AbstractCachePool
      */
     protected function storeItemInCache($key, CacheItemInterface $item, $ttl)
     {
+        $key  = $this->getHierarchyKey($key);
         $this->cache[$key] = $item;
 
         return true;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getValueFormStore($key)
+    {
+        if (isset($this->cache[$key])) {
+            return $this->cache[$key];
+        }
+    }
+
+
 }
