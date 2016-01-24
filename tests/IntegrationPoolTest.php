@@ -11,15 +11,9 @@
 
 namespace Cache\Adapter\PHPArray\Tests;
 
-use Cache\Adapter\PHPArray\ArrayCachePool;
 use Cache\IntegrationTests\CachePoolTest;
 
 class IntegrationPoolTest extends CachePoolTest
 {
-    private $cacheArray = [];
-
-    public function createCachePool()
-    {
-        return new ArrayCachePool($this->cacheArray);
-    }
+    use CreatePoolTrait;
 }

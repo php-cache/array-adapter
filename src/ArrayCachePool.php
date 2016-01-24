@@ -12,6 +12,7 @@
 namespace Cache\Adapter\PHPArray;
 
 use Cache\Adapter\Common\AbstractCachePool;
+use Cache\Adapter\Common\CacheItem;
 use Psr\Cache\CacheItemInterface;
 
 /**
@@ -32,15 +33,35 @@ class ArrayCachePool extends AbstractCachePool
         $this->cache = &$cache;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function getItemWithoutGenerateCacheKey($key)
+    {
+        if (isset($this->deferred[$key])) {
+            $item = $this->deferred[$key];
+
+            return is_object($item) ? clone $item : $item;
+        }
+
+        return $this->fetchObjectFromCache($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function fetchObjectFromCache($key)
     {
         if (isset($this->cache[$key])) {
             return $this->cache[$key];
         }
 
-        return false;
+        return new CacheItem($key, false);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function clearAllObjectsFromCache()
     {
         $this->cache = [];
@@ -48,6 +69,9 @@ class ArrayCachePool extends AbstractCachePool
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function clearOneObjectFromCache($key)
     {
         unset($this->cache[$key]);
@@ -55,6 +79,9 @@ class ArrayCachePool extends AbstractCachePool
         return true;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function storeItemInCache($key, CacheItemInterface $item, $ttl)
     {
         $this->cache[$key] = $item;

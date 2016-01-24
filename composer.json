@@ -28,18 +28,18 @@
     "require":
     {
         "php":                  "^5.5|^7.0",
-        "psr/cache":            "1.0.0",
-        "cache/adapter-common": "^0.1",
+        "psr/cache":            "~1.0",
+        "cache/adapter-common": "^0.2",
         "cache/taggable-cache": "^0.3"
     },
     "require-dev":
     {
         "phpunit/phpunit":         "^5.1|^4.0",
-        "cache/integration-tests": "^0.4"
+        "cache/integration-tests": "^0.7"
     },
     "provide":
     {
-        "psr/cache-implementation": "1.0.0"
+        "psr/cache-implementation": "~1.0"
     },
     "autoload":
     {

@@ -11,15 +11,9 @@
 
 namespace Cache\Adapter\PHPArray\Tests;
 
-use Cache\Adapter\PHPArray\ArrayCachePool;
 use Cache\IntegrationTests\TaggableCachePoolTest;
 
 class IntegrationTagTest extends TaggableCachePoolTest
 {
-    private $cacheArray = [];
-
-    public function createCachePool()
-    {
-        return new ArrayCachePool($this->cacheArray);
-    }
+    use CreatePoolTrait;
 }
