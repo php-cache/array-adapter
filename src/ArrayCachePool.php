@@ -18,6 +18,8 @@ use Cache\Hierarchy\HierarchicalPoolInterface;
 use Psr\Cache\CacheItemInterface;
 
 /**
+ * Array cache pool. You could set a limit of how many items you wantt to be stored to avoid memory leaks.
+ *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class ArrayCachePool extends AbstractCachePool implements HierarchicalPoolInterface
@@ -30,11 +32,31 @@ class ArrayCachePool extends AbstractCachePool implements HierarchicalPoolInterf
     private $cache;
 
     /**
+     * @type array
+     *             A map to hold keys
+     */
+    private $keyMap = [];
+
+    /**
+     * @type int
+     *           The maximum number of keys in the map
+     */
+    private $limit;
+
+    /**
+     * @type int
+     *           The next key that we should remove from the cache
+     */
+    private $currentPosition = 0;
+
+    /**
+     * @param int   $limit the amount if items stored in the cache. Using a limit will reduce memory leaks.
      * @param array $cache
      */
-    public function __construct(array &$cache = [])
+    public function __construct($limit = null, array &$cache = [])
     {
         $this->cache = &$cache;
+        $this->limit = $limit;
     }
 
     /**
@@ -98,8 +120,21 @@ class ArrayCachePool extends AbstractCachePool implements HierarchicalPoolInterf
      */
     protected function storeItemInCache($key, CacheItemInterface $item, $ttl)
     {
-        $key  = $this->getHierarchyKey($key);
+        $key               = $this->getHierarchyKey($key);
         $this->cache[$key] = $item;
+
+        if ($this->limit !== null) {
+            // Remove the oldest value
+            if (isset($this->keyMap[$this->currentPosition])) {
+                unset($this->cache[$this->keyMap[$this->currentPosition]]);
+            }
+
+            // Add the new key to the current position
+            $this->keyMap[$this->currentPosition] = $key;
+
+            // Increase the current position
+            $this->currentPosition = ($this->currentPosition + 1) % $this->limit;
+        }
 
         return true;
     }
@@ -113,6 +148,4 @@ class ArrayCachePool extends AbstractCachePool implements HierarchicalPoolInterf
             return $this->cache[$key];
         }
     }
-
-
 }
