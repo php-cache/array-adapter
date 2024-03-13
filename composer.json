@@ -41,11 +41,13 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Cache\\Adapter\\PHPArray\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Cache\\Adapter\\PHPArray\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cache\\Adapter\\PHPArray\\Tests\\": "Tests"
+        }
     },
     "extra": {
         "branch-alias": {
