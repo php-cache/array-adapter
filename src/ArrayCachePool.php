@@ -75,7 +75,7 @@ class ArrayCachePool extends AbstractCachePool implements HierarchicalPoolInterf
     /**
      * {@inheritdoc}
      */
-    protected function fetchObjectFromCache(string $key): bool
+    protected function fetchObjectFromCache(string $key): array
     {
         $keys = $this->getHierarchyKey($key);
 
